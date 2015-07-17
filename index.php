@@ -12,7 +12,7 @@ $text = isset($_GET['text']) ? $_GET['text'] : null;
 if ($text === null) {
     $request_uri = $_SERVER['REQUEST_URI'];
     if ($pos = strpos($request_uri, '?')) { $request_uri = substr($request_uri, 0, $pos); }
-    $text = ltrim($request_uri, '/');
+    $text = trim($request_uri, '/');
 }
 
 $gravatar = isset($_GET['gravatar']) ? $_GET['gravatar'] : false;
@@ -75,3 +75,8 @@ if (CACHE_IMAGE && file_exists($filename)) {
     echo $robohash->generate_image();
 }
 
+function wlog($text, $log_filename='robohash.log') {
+    $output = "[".date("Ymd H:i:s") . substr((string)microtime(), 1, 4)."] ".rtrim($text)."\n";
+    $fd = fopen('/var/log/'.$log_filename, 'a');
+    fwrite($fd, $output);
+}
